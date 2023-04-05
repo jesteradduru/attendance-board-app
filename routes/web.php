@@ -3,8 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ColumnController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\SettingIndexController;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,4 +23,5 @@ Route::prefix('settings')
 ->group(function () {
     Route::name('index')->get('/', [SettingIndexController::class, 'index']);
     Route::resource('column', ColumnController::class)->only(['create', 'store', 'destroy']);
+    Route::resource('employee', EmployeeController::class)->only(['create', 'store']);
 });

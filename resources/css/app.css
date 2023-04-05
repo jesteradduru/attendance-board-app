@@ -4,7 +4,7 @@
 
 @layer components {
     .box{
-        @apply p-4 shadow rounded-md border-2 border-gray-200 dark:bg-gray-900 dark:border-2 dark:border-gray-800
+        @apply p-4 rounded-md border-2 border-gray-100 dark:bg-gray-900 dark:border-2 dark:border-gray-800 bg-gray-50
     }
     .box .header{
         @apply text-gray-500 mb-2

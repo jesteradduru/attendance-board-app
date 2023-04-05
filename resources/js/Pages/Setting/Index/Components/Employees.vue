@@ -3,7 +3,7 @@
     <template #header>
       <div class="flex justify-between">
         <div class="text-md">Person</div>
-        <button class="btn-primary">Add Person</button>
+        <Link :href="route('settings.employee.create')" class="btn-primary">Add Person</Link>
       </div>
     </template>
     <ul>
@@ -28,4 +28,5 @@
 
 <script setup>
 import Box from '@/Components/UI/Box.vue'
+import { Link } from '@inertiajs/vue3'
 </script>
