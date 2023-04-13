@@ -10,6 +10,8 @@ class EmployeePicture extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['filename', 'employee_id'];
+
     public function owner(): BelongsTo
     {
         return $this->belongsTo(Employee::class);

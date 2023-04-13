@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use App\Models\EmployeePicture;
 
 class EmployeeController extends Controller
 {
@@ -28,18 +29,34 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        $employee = Employee::make(
-            $request->validate([
-                'full_name' => 'string|max:80|required|min:2',
-                'position' => 'string|max:80|required|min:2',
-            ])
-        );
+        $validatedData = $request->validate([
+            'full_name' => 'required|max:255|string|unique:employees',
+            'position' => 'required|string',
+            'profile_picture.*' => 'required|mimes:jpeg,png,jpg',
+        ], [
+            'profile_picture.*.mimes' => 'File must be an image (e.g. jpg, png, jpeg)',
+            'profile_picture.*.required' => 'Profile picture field is required',
+        ]);
+    
+        // Create a new Employee instance
+        $employee = new Employee([
+            'full_name' => $validatedData['full_name'],
+            'position' => $validatedData['position'],
+        ]);
 
-        $employee->picture()->create(
-            $request->validate([
-                'position' => 'string|max:80|required|min:2',
-            ])
-        );
+        // Save the Employee instance to the database
+        $employee->save();
+    
+        // Save the Employee Picture
+        $path = $request->file('profile_picture')[0]->store('profile_pictures', 'public');
+        
+        $employeePicture = new EmployeePicture([
+            'employee_id' => $employee->id,
+            'filename' => $path,
+        ]);
+        $employeePicture->save();
+    
+        return redirect()->back()->with('success', 'Employee has been added.');
     }
 
     /**

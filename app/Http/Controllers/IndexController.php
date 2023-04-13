@@ -9,9 +9,10 @@ class IndexController extends Controller
 {
     //
     public function index()
-    {
+    {   
         return inertia('Index/Index', [
-            'columns'=> Column::all()
+            'columns'=> Column::all(),
+            'employees'=> ''
         ]);
     }
 }

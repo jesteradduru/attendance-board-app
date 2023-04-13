@@ -7,12 +7,12 @@
       </div>
     </template>
     <ul>
-      <li class="flex gap-4 justify-between hover:bg-gray-100 p-2 rounded-md">
+      <li v-for="employee in props.employees" :key="employee.id" class="flex gap-4 justify-between hover:bg-gray-100 p-2 rounded-md">
         <div class="flex">
-          <div class="rounded-full bg-slate-400">x</div>
+          <div class="rounded-full bg-slate-400"><img :src="employee.picture.filename" /></div>
           <div class="flex flex-col">
-            <div class="text-lg">Jester Adduru</div>
-            <div class="text-sm text-gray-500">Information Systems Analyts I</div>
+            <div class="text-lg">{{ employee.full_name }}</div>
+            <div class="text-sm text-gray-500">{{ employee.position }}</div>
           </div>
         </div>
         <div>
@@ -24,9 +24,14 @@
       </li>
     </ul>
   </Box>
+  {{ props.employees }}
 </template>
 
 <script setup>
 import Box from '@/Components/UI/Box.vue'
 import { Link } from '@inertiajs/vue3'
+
+const props = defineProps({
+  employees: Array,
+})
 </script>

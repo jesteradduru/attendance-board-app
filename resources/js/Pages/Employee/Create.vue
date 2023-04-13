@@ -15,7 +15,7 @@
       <div>
         <label for="profile_picture" class="label">Profile Picture</label>
         <input id="profile_picture" type="file" name="" class="input-file w-full" @input="addProfilePicture" />
-        <div v-if="form.errors.profile_picture" class="input-error">{{ form.errors.profile_picture }}</div>
+        <div v-if="form.errors['profile_picture.0']" class="input-error">{{ form.errors['profile_picture.0'] }}</div>
       </div>
       <div>
         <button type="submit" class="btn-outline">Submit</button>
@@ -39,7 +39,7 @@ const addProfilePicture = (event) => {
   form.profile_picture.push(event.target.files[0])
 }
 
-const addEmployee = () => form.post(route('settings.employee.create'), {
+const addEmployee = () => form.post(route('settings.employee.store'), {
   onSuccess: () => {
     form.full_name = null,
     form.position= null,
