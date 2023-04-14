@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Column;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 
 class ColumnController extends Controller
@@ -43,6 +44,13 @@ class ColumnController extends Controller
     public function show(Column $column)
     {
         //
+        return inertia('Column/Show', [
+            'column' => $column,
+            'employees' => Employee::with('picture')->leftJoin('employee_attendances', 'employees.id', '=', 'employee_attendances.employee_id')
+                            ->whereNull('employee_attendances.id')
+                            ->select('employees.*')
+                            ->get()
+        ]);
     }
 
     /**

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ColumnController;
+use App\Http\Controllers\EmployeeAttendanceController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\SettingIndexController;
 /*
@@ -22,6 +23,7 @@ Route::prefix('settings')
 ->name('settings.')
 ->group(function () {
     Route::name('index')->get('/', [SettingIndexController::class, 'index']);
-    Route::resource('column', ColumnController::class)->only(['create', 'store', 'destroy']);
-    Route::resource('employee', EmployeeController::class)->only(['create', 'store']);
+    Route::resource('column', ColumnController::class)->only(['create', 'store', 'destroy', 'show']);
+    Route::resource('employee', EmployeeController::class)->only(['create', 'store', 'destroy']);
+    Route::name('attendance.store')->post('settings/attendance/store/{employee}/{column}', [EmployeeAttendanceController::class, 'store']);
 });

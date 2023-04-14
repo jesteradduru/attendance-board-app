@@ -11,9 +11,11 @@ class SettingIndexController extends Controller
     //
     public function index()
     {
+        $employees = Employee::all();
+        $employees->load(['picture']);
         return inertia('Setting/Index', [
             'columns'=> Column::all(),
-            "employees" =>  Employee::with('picture')->get()
+            "employees" =>  $employees
         ]);
     }
 }

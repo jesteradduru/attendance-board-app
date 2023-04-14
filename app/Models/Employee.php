@@ -16,4 +16,8 @@ class Employee extends Model
     {
         return $this->hasOne(EmployeePicture::class, 'employee_id');
     }
+    public function attendance() : HasOne
+    {
+        return $this->hasOne(EmployeeAttendance::class, 'employee_id');
+    }
 }

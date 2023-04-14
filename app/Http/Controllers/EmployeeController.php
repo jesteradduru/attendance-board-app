@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use App\Models\EmployeePicture;
+use Illuminate\Support\Facades\Storage;
 
 class EmployeeController extends Controller
 {
@@ -88,6 +89,9 @@ class EmployeeController extends Controller
      */
     public function destroy(Employee $employee)
     {
-        //
+        Storage::disk('public')->delete($employee->picture->filename);
+        $employee->picture()->delete();
+        $employee->delete();
+        return back()->with('success', 'Employee deleted');
     }
 }
