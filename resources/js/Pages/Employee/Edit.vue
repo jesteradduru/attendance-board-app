@@ -1,7 +1,8 @@
 <template>
   <Box class="w-3/4 mx-auto">
-    <template #header>Add Employee</template>
-    <form class="flex flex-col gap-3" @submit.prevent="addEmployee">
+    <template #header>Edit Employee</template>
+    <form class="flex flex-col gap-3" @submit.prevent="updateEmployee">
+      <img v-if="employee.picture" class="shadow w-36 h-36 rounded-full object-cover" :src="employee.picture.src" />
       <div>
         <label for="full_name" class="label">Full Name</label>
         <input id="full_name" v-model="form.full_name" type="text" name="" class="input-text" />
@@ -23,28 +24,25 @@
     </form>
   </Box>
 </template>
-
+  
 <script setup>
 import Box from '@/Components/UI/Box.vue'
 import { useForm } from '@inertiajs/vue3'
 
+const props = defineProps({
+  employee: Object,
+})
+  
 const form = useForm({
-  full_name: null,
-  position: null,
+  full_name: props.employee.full_name,
+  position: props.employee.position,
   profile_picture: [],
 })
-
+  
 const addProfilePicture = (event) => {
   form.profile_picture = []
   form.profile_picture.push(event.target.files[0])
 }
-
-const addEmployee = () => form.post(route('settings.employee.store'), {
-  onSuccess: () => {
-    form.full_name = null,
-    form.position= null,
-    form.profile_picture= [],
-    form.reset()
-  },
-})
+  
+const updateEmployee = () => form.post(route('settings.employee.update', { employee: props.employee.id }))
 </script>

@@ -17,7 +17,7 @@
       <li v-for="column in props.columns" :key="column.id" class="flex gap-4 justify-between hover:bg-gray-100 p-2 rounded-md">
         <div class="text-md none">{{ column.name }}</div>
         <div class="flex gap-2">
-          <button class="btn-outline">Edit</button>
+          <Link :href="route('settings.column.edit', {column: column.id})" class="btn-outline">Edit</Link>
           <Link :href="route('settings.column.destroy', {column: column.id})" method="delete" as="button" class="btn-outline">Delete</Link>
         </div>
       </li>

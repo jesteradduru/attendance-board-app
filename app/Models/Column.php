@@ -17,5 +17,4 @@ class Column extends Model
         return $this->hasMany(EmployeeAttendance::class);
     }
 
-    
 }

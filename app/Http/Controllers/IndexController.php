@@ -3,16 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\Column;
-use App\Models\EmployeeAttendance;
-use Illuminate\Http\Request;
 
 class IndexController extends Controller
 {
     //
     public function index()
-    {  
+    { 
         return inertia('Index/Index', [
-            'columns'=> EmployeeAttendance::with(['column', 'employee'])->get(),
+            'columns'=> Column::with([
+                    'attendances' => function($query){
+                        $query
+                        // ->today()
+                        // ->untilToday()
+                        ->with([
+                            'employee' => function($query) {
+                                $query->select('position', 'id', 'full_name')->with('picture');
+                            },
+                            'destination'
+                        ]);
+                    }
+                ])
+                ->get()
         ]);
     }
 }

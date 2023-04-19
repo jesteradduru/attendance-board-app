@@ -6,11 +6,11 @@
         <Link :href="route('settings.employee.create')" class="btn-primary">Add Employee</Link>
       </div>
     </template>
-    <ul>
-      <li v-for="employee in props.employees" :key="employee.id" class="flex gap-4 justify-between hover:bg-gray-100 p-2 rounded-md">
+    <div class="flex flex-col gap-2">
+      <Box v-for="employee in props.employees" :key="employee.id" class="flex gap-4 flex-col md:flex-row justify-between hover:bg-gray-100 p-2 rounded-md">
         <div class="grid grid-cols-12 gap-2">
           <div class="col-span-2">
-            <img class="rounded-full shadow" :src="employee.picture.src" />
+            <img v-if="employee.picture" class="shadow rounded-lg" :src="employee.picture.src" />
           </div>
           <div class="col-span-10">
             <div class="flex flex-col">
@@ -21,12 +21,12 @@
         </div>
         <div>
           <div class="flex gap-2">
-            <button class="btn-outline">Edit</button>
+            <Link class="btn-outline" :href="route('settings.employee.edit', {employee: employee.id})">Edit</Link>
             <Link class="btn-outline" :href="route('settings.employee.destroy', {employee: employee.id})" method="delete" as="button">Delete</Link>
           </div>
         </div>
-      </li>
-    </ul>
+      </Box>
+    </div>
   </Box>
   <!-- {{ props.employees }} -->
 </template>

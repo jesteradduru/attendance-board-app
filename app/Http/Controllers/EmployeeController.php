@@ -9,27 +9,14 @@ use Illuminate\Support\Facades\Storage;
 
 class EmployeeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return inertia('Employee/Create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
+        // dd($request->hasFile('profile_picture'));
         $validatedData = $request->validate([
             'full_name' => 'required|max:255|string|unique:employees',
             'position' => 'required|string',
@@ -60,38 +47,45 @@ class EmployeeController extends Controller
         return redirect()->back()->with('success', 'Employee has been added.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Employee $employee)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Employee $employee)
     {
         //
+        return inertia('Employee/Edit', [
+            'employee' => $employee->load('picture')
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Employee $employee)
     {
-        //
+        // Save the Employee instance to the database
+        $employee->update($request->validate([
+            'full_name' => 'max:255|string',
+            'position' => 'string',
+        ]));
+    
+        // Save the Employee Picture
+        if($request->hasFile('profile_picture')){
+            Storage::disk('public')->delete($employee->picture->filename);
+            $path = $request->file('profile_picture')[0]->store('profile_pictures', 'public');
+            
+            $employee->picture->update([
+                'employee_id' => $employee->id,
+                'filename' => $path,
+            ]);
+        }
+    
+        return redirect()->back()->with('success', 'Employee has been added.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Employee $employee)
     {
-        Storage::disk('public')->delete($employee->picture->filename);
-        $employee->picture()->delete();
-        $employee->delete();
-        return back()->with('success', 'Employee deleted');
+        $this->authorize('delete');
+        
+        if(!$employee->has('attendance')->exists()){
+            $employee->picture()->delete();
+            $employee->delete();
+            Storage::disk('public')->delete($employee->picture->filename);
+            return back()->with('success', 'Employee deleted');
+        }
     }
 }

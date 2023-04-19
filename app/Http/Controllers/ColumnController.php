@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Column;
 use App\Models\Employee;
+use App\Models\EmployeeAttendance;
 use Illuminate\Http\Request;
 
 class ColumnController extends Controller
@@ -43,12 +45,15 @@ class ColumnController extends Controller
      */
     public function show(Column $column)
     {
-        //
         return inertia('Column/Show', [
             'column' => $column,
-            'employees' => Employee::with('picture')->leftJoin('employee_attendances', 'employees.id', '=', 'employee_attendances.employee_id')
+            'employees' =>  Employee::leftJoin('employee_attendances', function ($join) {
+                                $join->on('employees.id', '=', 'employee_attendances.employee_id');
+                            })
+                            ->leftJoin('employee_pictures', 'employees.id', '=', 'employee_pictures.employee_id')
                             ->whereNull('employee_attendances.id')
                             ->select('employees.*')
+                            ->with('picture')
                             ->get()
         ]);
     }
@@ -59,6 +64,9 @@ class ColumnController extends Controller
     public function edit(Column $column)
     {
         //
+        return inertia('Column/Edit', [
+            'column' => $column
+        ]);
     }
 
     /**
@@ -67,6 +75,15 @@ class ColumnController extends Controller
     public function update(Request $request, Column $column)
     {
         //
+        $valdatedData = $request->validate([
+            'name' => 'required|string|max:255'
+        ]);
+
+        $column->update([
+            'name' => $valdatedData['name']
+        ]);
+
+        return redirect()->route('settings.index')->with('success', 'Column updated successfully');
     }
 
     /**
@@ -74,6 +91,7 @@ class ColumnController extends Controller
      */
     public function destroy(Column $column)
     {
+        $this->authorize('delete');
         $column->delete();
         return back()->with('success', 'Column deleted successfully');
     }
